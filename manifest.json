@@ -1,0 +1,23 @@
+{
+    "name": "philstocks chrome extension",
+    "description": "my chrome ext",
+    "version": "0.1",
+    "permissions": [
+        "https://www.philstocks.ph/"
+    ],
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": ["https://www.philstocks.ph/Infinity/Default.cshtml"],
+            "css": [
+                "intracandle/style.css"
+            ],
+            "js": [
+                "js/jquery.min.js", 
+                "js/highstock.js", 
+                "js/sand-signika.js", 
+                "intracandle/main.js"
+            ]
+        }
+    ]
+}
