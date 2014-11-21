@@ -84,7 +84,9 @@ func (this Files) Swap(i, j int) {
 }
 
 func importQuotes() {
-	files, _ := filepath.Glob("C:\\Users\\rroble\\Dropbox\\2014\\*.csv")
+	// FIXME: change this
+	pattern := "C:\\Users\\rroble\\Dropbox\\2014\\*.csv"
+	files, _ := filepath.Glob(pattern)
 	sort.Sort(Files(files))
 	for _, file := range files {
 		importCsv(file)
@@ -112,7 +114,6 @@ func importCsv(filename string) {
 		os.Exit(1)
 	}
 
-	// sanity check, display to standard output
 	for _, row := range rawCSVdata {
 		importRow(row)
 	}
