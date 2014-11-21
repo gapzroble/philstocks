@@ -3,7 +3,8 @@ jQuery(function($){
     // globals
     var mainId = "intracandle",
         main = $("#"+mainId),
-        sym = $("#txtSym");
+        sym = $("#txtSym"),
+        cache = new Array();
     
     // check if symbol is found
     var getSymbol = function() 
@@ -80,8 +81,30 @@ jQuery(function($){
         });
     };
     
-    var chart = function() 
-    {
+    var getPrevious = function() {
+        var s = getSymbol();
+        if (!(s in cache)) {
+            $.getJSON("https://localhost/quote/"+s, function(data) {
+                var ohlc = [], vol = [];
+                $.each(data, function(k,v) {
+                    var d = new Date(v.Date).valueOf();
+                    ohlc.push([d, v.Open, v.High, v.Low, v.Close]);
+                    vol.push([d, v.Volume]);
+                });
+                var result = [ohlc, vol];
+                cache[s] = result;
+                drawChart(result, getCurrent());
+                return result;
+            });
+        }
+        if (s in cache) {
+            return cache[s];
+        }
+        cache[s] = [[],[]];
+        return cache[s];
+    };
+    
+    var getCurrent = function() {
         var d = new Date(new Date().toLocaleDateString()).valueOf();
         var r = $("#symQuoteDay").html().split(' - ');
         var h = parseFloat(r[1]);
@@ -89,12 +112,27 @@ jQuery(function($){
         var o = parseFloat($("#symQuoteOpen").html());
         var c = parseFloat($("#symQuoteLPrice").html());
         var v = parseFloat($("#symQuoteVolume").html().replace(/,/g, ""));
+        return [ [d, o, h, l, c], [d, v] ];
+    };
+    
+    var drawChart = function(prev, cur) 
+    {
+        var ohlc = prev[0],
+            volume = prev[1];
+
+        ohlc.push(cur[0]);
+        volume.push(cur[1]);
         
-        var ohlc = [[d, o, h, l, c]],
-            volume = [[d, v]];
         try {
             updateChart(ohlc, volume);
         } catch(error) {}
+    };
+    
+    var chart = function() 
+    {
+        var p = getPrevious(),
+            c = getCurrent();
+        drawChart(p, c);
     };
     
     var install = function() 
