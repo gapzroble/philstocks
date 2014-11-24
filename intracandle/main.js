@@ -81,21 +81,29 @@ jQuery(function($){
         });
     };
     
+    var fetchPrevious = function() {
+        var s = getSymbol();
+        $.getJSON("https://localhost/quote/"+s, function(data) {
+            var ohlc = [], vol = [];
+            $.each(data, function(k,v) {
+                var d = new Date(v.Date).valueOf();
+                ohlc.push([d, v.Open, v.High, v.Low, v.Close]);
+                vol.push([d, v.Volume]);
+            });
+            var result = [ohlc, vol];
+            cache[s] = result;
+            drawChart(result, getCurrent());
+            return result;
+        });
+    }
+    
     var getPrevious = function() {
         var s = getSymbol();
         if (!(s in cache)) {
-            $.getJSON("https://localhost/quote/"+s, function(data) {
-                var ohlc = [], vol = [];
-                $.each(data, function(k,v) {
-                    var d = new Date(v.Date).valueOf();
-                    ohlc.push([d, v.Open, v.High, v.Low, v.Close]);
-                    vol.push([d, v.Volume]);
-                });
-                var result = [ohlc, vol];
-                cache[s] = result;
-                drawChart(result, getCurrent());
-                return result;
-            });
+            try {
+                return fetchPrevious();
+            } catch(err) {
+            }
         }
         if (s in cache) {
             return cache[s];
