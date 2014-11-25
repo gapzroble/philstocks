@@ -1,10 +1,9 @@
 jQuery(function($){
 
     // globals
-    var mainId = "intracandle",
-        main = $("#"+mainId),
+    var mainId = "intracandle", main = $("#"+mainId),
         sym = $("#txtSym"),
-        cache = new Array();
+        ohlcData = [], volumeData = [];
     
     // check if symbol is found
     var getSymbol = function() 
@@ -15,132 +14,151 @@ jQuery(function($){
         return false;
     };
     
-    var updateChart = function(ohlc, volume) {
-        // create the chart
-        main.highcharts('StockChart', {
-            chart: {
-                animation: false
-            },
-            rangeSelector: {
-                enabled: false
-            },
-            scrollbar: {
-                enabled: false
-            },
-            navigator: {
-                enabled: false
-            },
-            credits: {
-                enabled: false
-            },
-            plotOptions: {
-                candlestick: {
-                    animation: false
-                },
-                series: {
-                    animation: false
-                }
-            },
-            title: {
-                text: ''//getSymbol()
-            },
-            yAxis: [{
-                labels: {
-                    align: 'right',
-                    x: -3
-                },
-                title: {
-                    text: ''
-                },
-                height: '60%',
-                lineWidth: 2
-            }, {
-                labels: {
-                    align: 'right',
-                    x: -3
-                },
-                title: {
-                    text: ''
-                },
-                top: '65%',
-                height: '35%',
-                offset: 0,
-                lineWidth: 2
-            }],
-
-            series: [{
-                type: 'candlestick',
-                name: getSymbol()+'',
-                data: ohlc
-            }, {
-                type: 'column',
-                name: 'Volume',
-                data: volume,
-                yAxis: 1
-            }]
-        });
-    };
-    
-    var fetchPrevious = function() {
-        var s = getSymbol();
-        $.getJSON("https://localhost/quote/"+s, function(data) {
-            var ohlc = [], vol = [];
-            $.each(data, function(k,v) {
-                var d = new Date(v.Date).valueOf();
-                ohlc.push([d, v.Open, v.High, v.Low, v.Close]);
-                vol.push([d, v.Volume]);
-            });
-            var result = [ohlc, vol];
-            cache[s] = result;
-            drawChart(result, getCurrent());
-            return result;
-        });
-    }
-    
-    var getPrevious = function() {
-        var s = getSymbol();
-        if (!(s in cache)) {
-            try {
-                return fetchPrevious();
-            } catch(err) {
-            }
-        }
-        if (s in cache) {
-            return cache[s];
-        }
-        cache[s] = [[],[]];
-        return cache[s];
-    };
-    
     var getCurrent = function() {
-        var d = new Date(new Date().toLocaleDateString()).valueOf();
+        var d = new Date(new Date().toLocaleDateString());
         var r = $("#symQuoteDay").html().split(' - ');
         var h = parseFloat(r[1]);
         var l = parseFloat(r[0]);
         var o = parseFloat($("#symQuoteOpen").html());
         var c = parseFloat($("#symQuoteLPrice").html());
         var v = parseFloat($("#symQuoteVolume").html().replace(/,/g, ""));
-        return [ [d, o, h, l, c], [d, v] ];
+        return [ [d, h, l, o, c], [d, v] ];
     };
     
-    var drawChart = function(prev, cur) 
+    var getMA = function(period)
     {
-        var ohlc = prev[0],
-            volume = prev[1];
+        var data = [];
+        for (var i = 0; i < ohlcData.length; i++) {
+            if (i < period) {
+                data.push(null);
+            } else {
+                var sum = 0;
+                for (var y = 0; y < period; y++){
+                    sum += ohlcData[i-y][4];
+                }
+                data.push(sum/period);
+            }
+        }
 
-        ohlc.push(cur[0]);
-        volume.push(cur[1]);
+        return data.filter(shrink);
+    };
+    
+    var shrink = function (value, index, arr) {
+        return index > 100;
+    };
+    
+    var updateChart = function(ohlc, volume) 
+    {
+        ohlcData.push(ohlc);
+        volumeData.push(volume);
         
-        try {
-            updateChart(ohlc, volume);
-        } catch(error) {}
+        $('#jqChart').jqChart({
+            legend: { visible: false },
+            border: { lineWidth: 0, padding: 0 },
+            tooltips: { type: 'shared', disabled: true },
+            crosshairs: { enabled: true, hLine: false },
+            animation: { enabled: false },
+            axes: [
+                { 
+                    type: 'linear', 
+                    location: 'left', 
+                    width: 30 }
+                ,{
+                    type: 'dateTime',
+                    location: 'bottom',
+                    skipEmptyDays: true,
+                    labels: { visible : false }
+                }
+                ,{
+                    type: 'category',
+                    location: 'bottom',
+                    labels: { visible : false },
+                    lineWidth: 0,
+                    majorTickMarks: { lineWidth: 0 },
+                    minorTickMarks: { lineWidth: 0 }
+                }
+            ],
+            series: [
+                {
+                    title: '',
+                    type: 'candlestick',
+                    data: ohlcData.filter(shrink),
+                    priceUpFillStyle: 'green',
+                    priceDownFillStyle: 'red',
+                    strokeStyle: 'black'
+                }
+                ,{
+                    title: '',
+                    type: 'spline',
+                    data: getMA(20),
+                    markers: { size: 0 },
+                    lineWidth: 1,
+                    strokeStyle: '#ff0000'
+                }
+                ,{
+                    title: '',
+                    type: 'spline',
+                    data: getMA(50),
+                    markers: { size: 0 },
+                    lineWidth: 1,
+                    strokeStyle: '#ff00ff'
+                }
+                ,{
+                    title: '',
+                    type: 'spline',
+                    data: getMA(100),
+                    markers: { size: 0 },
+                    lineWidth: 1,
+                    strokeStyle: '#0000ff'
+                }
+            ]
+        });
+
+        $('#jqChartVolume').jqChart({
+            legend: { visible: false },
+            border: { lineWidth: 0, padding: 0 },
+            tooltips: { type: 'shared', disabled: true },
+            crosshairs: { enabled: true, hLine: false },
+            animation: { enabled: false },
+            axes: [
+                { 
+                    type: 'dateTime', 
+                    location: 'bottom', 
+                    skipEmptyDays: true 
+                },
+                {
+                    type: 'linear', 
+                    location: 'left', 
+                    width: 30 
+                }
+            ],
+            series: [{ type: 'column', data: volumeData.filter(shrink), fillStyle: 'black' }]
+        });
     };
     
     var chart = function() 
     {
-        var p = getPrevious(),
-            c = getCurrent();
-        drawChart(p, c);
+        var current = getCurrent(),
+            ohlc = current[0], volume = current[1];
+        ohlcData = []; volumeData = [];
+        
+        $.getJSON("https://localhost/150/"+getSymbol())
+            .done(function(data) {
+                x=data.sort(function (a, b) {
+                    if (a.Date < b.Date) return -1;
+                    if (b.Date < a.Date) return 1;
+                    return 0;
+                });
+                $.each(data, function(k,v) {
+                    var d = new Date(v.Date);
+                    ohlcData.push([d, v.High, v.Open, v.Low, v.Close]);
+                    volumeData.push([d, v.Volume]);
+                });
+                updateChart(ohlc, volume);
+            })
+            .fail(function() {
+                updateChart(ohlc, volume);
+            });
     };
     
     var install = function() 
@@ -149,6 +167,66 @@ jQuery(function($){
         if (main.size() == 0) {
             main = $('<div/>').attr("id", mainId);
             $('.consoleContainer').append(main);
+            $('<div class="info"><b>Open: </b><span id="open"></span>' +
+                '<b>High: </b><span id="high"></span>' +
+                '<b>Low: </b><span id="low"></span>' + 
+                '<b>Close: </b><span id="close"></span>' +
+                '<b>Volume: </b><span id="volume"></span>' +
+                '<span id="date"></span></div>').appendTo(main);
+            $('<div id="jqChart"></div>').appendTo(main);
+            $('<div id="jqChartVolume"></div>').appendTo(main);
+            
+            var isHighlighting = false;
+
+            $('#jqChart').bind('dataHighlighting', function (event, data) {
+                if (data && typeof data[0] != "undefined") {
+                    data = data[0];
+                }
+
+                if (!data) {
+                    $('#jqChartVolume').jqChart('highlightData', null);
+                    return;
+                }
+
+                $('#open').html(data.open);
+                $('#high').html(data.high);
+                $('#low').html(data.low);
+                $('#close').html(data.close);
+
+                var date = data.chart.stringFormat(data.x, "mmmm d, yyyy");
+
+                $('#date').html(date);
+
+                if (!isHighlighting) {
+
+                    isHighlighting = true;
+
+                    var index = $.inArray(data.dataItem, ohlcData);
+                    $('#jqChartVolume').jqChart('highlightData', [volumeData[index]]);
+                }
+
+                isHighlighting = false;
+            });
+
+            $('#jqChartVolume').bind('dataHighlighting', function (event, data) {
+                if (!data) {
+                    $('#jqChart').jqChart('highlightData', null);
+                    return;
+                }
+
+                $('#volume').html(data.y.toLocaleString());
+
+                if (!isHighlighting) {
+
+                    isHighlighting = true;
+
+                    var index = $.inArray(data.dataItem, volumeData);
+                    $('#jqChart').jqChart('highlightData', [ohlcData[index]]);
+                }
+
+                isHighlighting = false;
+            });
+
             chart();
         }
     };

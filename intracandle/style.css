@@ -1,6 +1,28 @@
 #intracandle {
     width: 588px;
-    height: 200px;
     margin-left: 146px;
     background: white;
+}
+#jqChart {
+    height: 200px;
+}
+#jqChartVolume {
+    height: 70px;
+    /*margin-top: -19px;*/
+    margin-top: -27px;
+    background: white;
+}
+#date {
+    font-weight: bold;
+    float: right;
+}
+.info span {
+    margin-right: 10px;
+}
+.info {
+    padding: 2px;
+}
+.info * {
+    font-size: 12px;
+    font-family: Arial;
 }

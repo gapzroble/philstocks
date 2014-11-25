@@ -33,13 +33,14 @@ func main() {
 	go importQuotes()
 
 	m := martini.Classic()
-	m.Get("/quote/:symbol", func(params martini.Params, res http.ResponseWriter) string {
+	m.Get("/:max/:symbol", func(params martini.Params, res http.ResponseWriter) string {
 		res.Header().Set("Content-type", "application/json")
 		res.Header().Set("Access-Control-Allow-Origin", "*")
 		var quotes []Quote
 		symbol := string(params["symbol"])
+		limit := params["max"]
 		fmt.Println("symbol = " + symbol)
-		if db.Where("symbol = ?", symbol).Limit(5).Order("date desc").Find(&quotes).RecordNotFound() {
+		if db.Where("symbol = ?", symbol).Limit(limit).Order("date desc").Find(&quotes).RecordNotFound() {
 			return "[]"
 		}
 		result, _ := json.Marshal(quotes)
