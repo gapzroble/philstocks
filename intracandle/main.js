@@ -44,13 +44,18 @@ jQuery(function($){
     };
     
     var shrink = function (value, index, arr) {
-        return index > 100;
+        if (arr.length > 100) {
+            return index > 100;
+        }
+        return true;
     };
     
     var updateChart = function(ohlc, volume) 
     {
         ohlcData.push(ohlc);
         volumeData.push(volume);
+        
+        var showMA = (ohlcData.length > 50);
         
         $('#jqChart').jqChart({
             legend: { visible: false },
@@ -93,7 +98,8 @@ jQuery(function($){
                     data: getMA(20),
                     markers: { size: 0 },
                     lineWidth: 1,
-                    strokeStyle: '#ff0000'
+                    strokeStyle: '#ff0000',
+                    visible: showMA
                 }
                 ,{
                     title: '',
@@ -101,7 +107,8 @@ jQuery(function($){
                     data: getMA(50),
                     markers: { size: 0 },
                     lineWidth: 1,
-                    strokeStyle: '#ff00ff'
+                    strokeStyle: '#ff00ff',
+                    visible: showMA
                 }
                 ,{
                     title: '',
@@ -109,7 +116,8 @@ jQuery(function($){
                     data: getMA(100),
                     markers: { size: 0 },
                     lineWidth: 1,
-                    strokeStyle: '#0000ff'
+                    strokeStyle: '#0000ff',
+                    visible: showMA
                 }
             ]
         });
