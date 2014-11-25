@@ -144,7 +144,7 @@ jQuery(function($){
         
         $.getJSON("https://localhost/150/"+getSymbol())
             .done(function(data) {
-                x=data.sort(function (a, b) {
+                data.sort(function (a, b) {
                     if (a.Date < b.Date) return -1;
                     if (b.Date < a.Date) return 1;
                     return 0;
@@ -179,11 +179,11 @@ jQuery(function($){
             var isHighlighting = false;
 
             $('#jqChart').bind('dataHighlighting', function (event, data) {
-                if (data && typeof data[0] != "undefined") {
+                if (data && typeof data[0] != "undefined" && data[0].open != "undefined") {
                     data = data[0];
                 }
 
-                if (!data) {
+                if (!data || typeof data.open == "undefined") {
                     $('#jqChartVolume').jqChart('highlightData', null);
                     return;
                 }
