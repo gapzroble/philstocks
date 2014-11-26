@@ -1,3 +1,5 @@
 nbproject
 intracandle/*.exe
 *.lnk
+intracandle/2014/*
+!intracandle/2014/.gitkeep
