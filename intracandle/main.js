@@ -44,8 +44,9 @@ jQuery(function($){
     };
     
     var shrink = function (value, index, arr) {
-        if (arr.length > 100) {
-            return index > 100;
+        var toIndex = arr.length - 50;
+        if (toIndex > 0) {
+            return index >= toIndex;
         }
         return true;
     };
@@ -61,7 +62,12 @@ jQuery(function($){
             legend: { visible: false },
             border: { lineWidth: 0, padding: 0 },
             tooltips: { type: 'shared', disabled: true },
-            crosshairs: { enabled: true, hLine: false },
+            crosshairs: {
+                enabled: true,
+                hLine: { strokeStyle: '#c0c0c0' },
+                vLine: { strokeStyle: '#c0c0c0' },
+                snapToDataPoints: false
+            },
             animation: { enabled: false },
             axes: [
                 { 
@@ -126,7 +132,11 @@ jQuery(function($){
             legend: { visible: false },
             border: { lineWidth: 0, padding: 0 },
             tooltips: { type: 'shared', disabled: true },
-            crosshairs: { enabled: true, hLine: false },
+            crosshairs: {
+                enabled: true,
+                hLine: false,
+                vLine: { strokeStyle: '#c0c0c0' },
+            },
             animation: { enabled: false },
             axes: [
                 { 
@@ -142,6 +152,13 @@ jQuery(function($){
             ],
             series: [{ type: 'column', data: volumeData.filter(shrink), fillStyle: 'black' }]
         });
+        
+        try {
+            var data1 = $('#jqChart').jqChart('option', 'series')[0].data;
+            $('#jqChart').jqChart('highlightData', [data1[data1.length-1]]);
+            $('#jqChart').jqChart('highlightData', null);
+            $('#jqChartVolume').jqChart('highlightData', null);
+        } catch(err) {}
     };
     
     var chart = function() 
@@ -250,7 +267,7 @@ jQuery(function($){
         var observer = new MutationObserver(mutationHandler);
         var config = {childList: true, characterData: true, attributes: true, subtree: true};
         
-        $("#symQuoteLPrice").each (function() {
+        $(".pricesContainer").each (function() {
             observer.observe(this, config);
         });
     };

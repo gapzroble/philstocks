@@ -39,7 +39,6 @@ func main() {
 		var quotes []Quote
 		symbol := string(params["symbol"])
 		limit := params["max"]
-		fmt.Println("symbol = " + symbol)
 		if db.Where("symbol = ?", symbol).Limit(limit).Order("date desc").Find(&quotes).RecordNotFound() {
 			return "[]"
 		}
