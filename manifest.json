@@ -10,7 +10,7 @@
         {
             "matches": ["https://www.philstocks.ph/Infinity/Default.cshtml"],
             "css": [
-                "intracandle/style.css",
+                "style.css",
                 "jqChartJQueryPlugin/css/jquery.jqChart.css",
                 "jqChartJQueryPlugin/css/jquery.jqRangeSlider.css",
                 "jqChartJQueryPlugin/themes/smoothness/jquery-ui-1.10.4.css"
@@ -20,7 +20,7 @@
                 "jqChartJQueryPlugin/js/jquery.mousewheel.js",
                 "jqChartJQueryPlugin/js/jquery.jqChart.min.js",
                 "jqChartJQueryPlugin/js/jquery.jqRangeSlider.min.js",
-                "intracandle/main.js"
+                "main.js"
             ]
         }
     ]

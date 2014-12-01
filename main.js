@@ -64,8 +64,8 @@ jQuery(function($){
             tooltips: { type: 'shared', disabled: true },
             crosshairs: {
                 enabled: true,
-                hLine: { strokeStyle: '#c0c0c0' },
-                vLine: { strokeStyle: '#c0c0c0' },
+                hLine: { strokeStyle: '#00FFFF' },
+                vLine: { strokeStyle: '#00FFFF' },
                 snapToDataPoints: false
             },
             animation: { enabled: false },
@@ -135,7 +135,7 @@ jQuery(function($){
             crosshairs: {
                 enabled: true,
                 hLine: false,
-                vLine: { strokeStyle: '#c0c0c0' },
+                vLine: { strokeStyle: '#00FFFF' },
             },
             animation: { enabled: false },
             axes: [

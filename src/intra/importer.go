@@ -30,7 +30,7 @@ var (
 
 func init() {
 	dropboxUrl = "https://www.dropbox.com/sh/1dluf0lawy9a7rm/AADwhfNwFRVoQg5TaqOaVFs9a/2014?dl=1"
-	quotesFolder = "2014"
+	quotesFolder = "quotes"
 }
 
 func importQuotes() {
@@ -50,7 +50,6 @@ func doImportQuotes() {
 		test = CsvFile{Filename: file}
 		if db.Where(&test).First(&test).RecordNotFound() {
 			importCsv(file)
-			fmt.Println("")
 			db.Save(test)
 		}
 	}
