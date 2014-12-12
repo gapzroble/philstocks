@@ -34,13 +34,21 @@ func init() {
 }
 
 func importQuotes() {
-	go doImportQuotes()
-	downloadQuotes()
+	go func() {
+		doImportQuotes()
+		calculateMA()
+	}()
+
+	if ok := downloadQuotes(); ok {
+		doImportQuotes()
+		calculateMA()
+	}
 }
 
 func doImportQuotes() {
 	log.Printf("[importQuotes] started\n")
 	defer log.Printf("[importQuotes] done.\n")
+
 	pattern := quotesFolder + "\\*.csv"
 	files, _ := filepath.Glob(pattern)
 	sort.Sort(Files(files))
@@ -53,19 +61,9 @@ func doImportQuotes() {
 			db.Save(test)
 		}
 	}
-
-	// force import
-	go func() {
-		log.Printf("[force importQuotes] started\n")
-		defer log.Printf("[force importQuotes] done.\n")
-		for _, file := range files {
-			importCsv(file)
-		}
-	}()
 }
 
 func importCsv(filename string) {
-
 	csvfile, err := os.Open(filename)
 
 	if err != nil {
@@ -109,7 +107,10 @@ func importRow(r []string) {
 
 // -----------------------------------------------------------------------------
 
-func downloadQuotes() {
+func downloadQuotes() bool {
+	log.Printf("[downloadQuotes] started\n")
+	defer log.Printf("[downloadQuotes] done.\n")
+
 	target := quotesFolder + "/quotes.zip"
 
 	// get last modified time
@@ -119,12 +120,11 @@ func downloadQuotes() {
 		elapsed := time.Since(modifiedtime)
 		if elapsed.Hours() < 3 { // less than 3 hours
 			log.Printf("[downloadQuotes] already downloaded %s ago\n", elapsed)
-			return
+			return false
 		}
 	}
 
-	defer doImportQuotes()
-
 	DownloadToFile(dropboxUrl, target, "quotes")
 	Unzip(target, quotesFolder)
+	return true
 }

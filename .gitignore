@@ -1,4 +1,5 @@
 nbproject
 *.exe
-quotes/*
-!quotes/.gitkeep
+!/quotes/.gitkeep
+/quotes/
+*.sublime-workspace

@@ -1,0 +1,10 @@
+{
+	"folders":
+	[
+		{
+			"path": "/D/Projects/philstocks_chrome",
+			"folder_exclude_patterns": ["nbproject"],
+            "file_exclude_patterns": ["*.cer","*.sublime-workspace"]
+		}
+	]
+}
