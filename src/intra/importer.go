@@ -4,10 +4,12 @@ import (
 	"encoding/csv"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -29,7 +31,8 @@ var (
 )
 
 func init() {
-	dropboxUrl = "https://www.dropbox.com/sh/1dluf0lawy9a7rm/AADwhfNwFRVoQg5TaqOaVFs9a/2014?dl=1"
+	//dropboxUrl = "https://www.dropbox.com/sh/1dluf0lawy9a7rm/AADwhfNwFRVoQg5TaqOaVFs9a/2014?dl=1"
+	dropboxUrl = "https://www.dropbox.com/sh/1dluf0lawy9a7rm/AACh8nCUuvTvP4YdVEH29On2a/2015?dl=1"
 	quotesFolder = "quotes"
 }
 
@@ -89,19 +92,23 @@ func importCsv(filename string) {
 }
 
 func importRow(r []string) {
+	// COSCO,02/25/2015,9.72,9.75,9.52,9.66,2714500,2714433
 	d, _ := time.Parse("01/02/2006", r[1])
-	l, _ := strconv.ParseFloat(r[2], 64)
+	o, _ := strconv.ParseFloat(r[2], 64)
 	h, _ := strconv.ParseFloat(r[3], 64)
-	o, _ := strconv.ParseFloat(r[4], 64)
+	l, _ := strconv.ParseFloat(r[4], 64)
 	c, _ := strconv.ParseFloat(r[5], 64)
 	v, _ := strconv.ParseFloat(r[6], 64)
 	n, _ := strconv.ParseFloat(r[7], 64)
 	q := Quote{Symbol: r[0], Date: d, Low: l, High: h, Open: o, Close: c, Volume: v, NetBuySell: n}
 
+	date := d.Format("2006-01-02")
 	var test Quote
-	if db.Where("symbol = ? and date = ?", q.Symbol, q.Date).First(&test).RecordNotFound() {
+	if db.Where("symbol = ? and date = ?", q.Symbol, date).First(&test).RecordNotFound() {
 		db.Save(&q)
 		fmt.Print(".")
+	} else {
+		db.Model(&test).Where("symbol = ? and date = ?", q.Symbol, date).Update(&q)
 	}
 }
 
@@ -127,4 +134,21 @@ func downloadQuotes() bool {
 	DownloadToFile(dropboxUrl, target, "quotes")
 	Unzip(target, quotesFolder)
 	return true
+}
+
+func importCurrent(symbol string, qs url.Values) {
+	if qs.Get("o") == "NaN" {
+		return
+	}
+	r := make([]string, 8)
+	r[0] = strings.ToUpper(symbol)
+	r[1] = qs.Get("d")
+	r[2] = qs.Get("o")
+	r[3] = qs.Get("h")
+	r[4] = qs.Get("l")
+	r[5] = qs.Get("c")
+	r[6] = qs.Get("v")
+	r[7] = "0"
+	log.Println(r)
+	importRow(r)
 }
