@@ -33,7 +33,7 @@ var db *gorm.DB
 
 func init() {
 	// FIXME: change this
-	db = initDB("mysql", "root:@/pse?charset=utf8&parseTime=True")
+	db = initDB("mysql", "root:testing@/pse?charset=utf8&parseTime=True")
 }
 
 func initDB(driver, dsn string) *gorm.DB {
