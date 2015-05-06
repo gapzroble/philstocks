@@ -149,6 +149,5 @@ func importCurrent(symbol string, qs url.Values) {
 	r[5] = qs.Get("c")
 	r[6] = qs.Get("v")
 	r[7] = "0"
-	log.Println(r)
 	importRow(r)
 }
