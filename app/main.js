@@ -131,11 +131,7 @@ function app($){
             legend: { visible: false },
             border: { lineWidth: 0, padding: 0 },
             tooltips: { type: 'shared', disabled: true },
-            crosshairs: {
-                enabled: true,
-                hLine: false,
-                vLine: { strokeStyle: '#00FFFF' },
-            },
+            crosshairs: { enabled: true, hLine: false, vLine: { strokeStyle: '#00FFFF' } },
             animation: { enabled: false },
             axes: [
                 { 
@@ -273,6 +269,11 @@ function app($){
         observeSymbol();
     }
     
+<<<<<<< .mine
 };
 
+=======
+});
+
+>>>>>>> .theirs
 jQuery(app);
