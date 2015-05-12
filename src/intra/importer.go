@@ -100,9 +100,12 @@ func importRow(r []string, file string) {
 	)
 	d, er1 = time.Parse("01/02/2006", r[1])
 	if er1 != nil {
-		d, er2 = time.Parse("1-2-2006", r[1])
+		d, er2 = time.Parse("01/02/2006", r[1])
 		if er2 != nil {
-			d, _ = time.Parse("01-02-2006", r[1])
+			d, er3 = time.Parse("01-02-2006", r[1])
+			if er3 != nil {
+				d, _ = time.Parse("1-2-2006", r[1])
+			}
 		}
 	}
 	o, _ := strconv.ParseFloat(r[2], 64)
