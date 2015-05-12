@@ -7,6 +7,7 @@ import (
 )
 
 type Quote struct {
+	Id         int
 	Symbol     string    `sql:"size:20;not null" json:"-"`
 	Date       time.Time `sql:"type:date;not null"`
 	Open       float64   `sql:"not null"`
@@ -15,19 +16,20 @@ type Quote struct {
 	Close      float64   `sql:"not null"`
 	Volume     float64   `sql:"not null"`
 	NetBuySell float64   `json:"-"`
+	Csv        string    `sql:"size:20" json:"-"`
 }
 
 type CsvFile struct {
-	Filename string
+	Filename string `sql:"size:32"`
 }
 
-type MovingAverage struct {
-	Symbol string    `sql:"size:20;not null" json:"-"`
-	Date   time.Time `sql:"type:date;not null"`
-	Period int       `sql:"not null"`
-	Value  float64   `sql:"not null"`
-	Point  string    `sql:"size:5;not null"` // low,high,open,close
-}
+// type MovingAverage struct {
+// 	Symbol string    `sql:"size:20;not null" json:"-"`
+// 	Date   time.Time `sql:"type:date;not null"`
+// 	Period int       `sql:"not null"`
+// 	Value  float64   `sql:"not null"`
+// 	Point  string    `sql:"size:5;not null"` // low,high,open,close
+// }
 
 var db *gorm.DB
 
@@ -55,7 +57,7 @@ func initDB(driver, dsn string) *gorm.DB {
 	Gdb.LogMode(false)
 	Gdb.AutoMigrate(&Quote{}).AddUniqueIndex("daily", "symbol", "date")
 	Gdb.AutoMigrate(&CsvFile{}).AddUniqueIndex("file", "filename")
-	Gdb.AutoMigrate(&MovingAverage{}).AddUniqueIndex("ma", "symbol", "date", "point")
+	// Gdb.AutoMigrate(&MovingAverage{}).AddUniqueIndex("ma", "symbol", "date", "point")
 
 	return &Gdb
 }

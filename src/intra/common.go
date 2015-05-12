@@ -16,12 +16,14 @@ func ReadFile(_url string) (_bytes []byte, _err error) {
 	var res *http.Response = nil
 	res, _err = http.Get(_url)
 	if _err != nil {
-		log.Fatal(_err)
+		log.Println(_err)
+		return
 	}
 	_bytes, _err = ioutil.ReadAll(res.Body)
 	defer res.Body.Close()
 	if _err != nil {
-		log.Fatal(_err)
+		log.Println(_err)
+		return
 	}
 	log.Printf("[ReadFile] Size of download: %d\n", len(_bytes))
 	return
@@ -30,19 +32,21 @@ func ReadFile(_url string) (_bytes []byte, _err error) {
 func WriteFile(_target string, _bytes []byte) (_err error) {
 	log.Printf("[WriteFile] Size of download: %d\n", len(_bytes))
 	if _err = ioutil.WriteFile(_target, _bytes, 0444); _err != nil {
-		log.Fatal(_err)
+		log.Println(_err)
 	}
 	return
 }
 
-func DownloadToFile(_url string, _target string, _name string) {
+func DownloadToFile(_url string, _target string, _name string) bool {
 	log.Printf("[DownloadToFile] From: %s.\n", _url)
 	if bytes, err := ReadFile(_url); err == nil {
 		log.Printf("%s's been downloaded.\n", _name)
 		if WriteFile(_target, bytes) == nil {
 			log.Printf("%s's been copied: %s\n", _name, _target)
+			return true
 		}
 	}
+	return false
 }
 
 func Unzip(src, dest string) error {
@@ -70,7 +74,7 @@ func Unzip(src, dest string) error {
 
 			err = os.MkdirAll(fdir, f.Mode())
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
 				return err
 			}
 			f, err := os.OpenFile(

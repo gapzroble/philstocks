@@ -10,5 +10,12 @@ set GOPATH=%GOPATH%;%~dp0
 md quotes > NUL
 
 go build server.go
+echo build done
+rem pause
 server.exe
+
+:retry
+echo retry
 pause
+cls
+run_server

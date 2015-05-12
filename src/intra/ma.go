@@ -5,8 +5,9 @@ import (
 )
 
 func calculateMA() {
-	log.Printf("[calculateMA] started\n")
-	defer log.Printf("[calculateMA] done.\n")
+	return
+	// log.Printf("[calculateMA] started\n")
+	// defer log.Printf("[calculateMA] done.\n")
 
 	rows, err := db.Table("quotes").Select("distinct symbol").Order("date asc").Rows()
 	defer rows.Close()

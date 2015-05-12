@@ -10,17 +10,19 @@
         {
             "matches": ["https://www.philstocks.ph/Infinity/Default.cshtml"],
             "css": [
-                "style.css",
                 "jqChartJQueryPlugin/css/jquery.jqChart.css",
                 "jqChartJQueryPlugin/css/jquery.jqRangeSlider.css",
-                "jqChartJQueryPlugin/themes/smoothness/jquery-ui-1.10.4.css"
+                "jqChartJQueryPlugin/themes/smoothness/jquery-ui-1.10.4.css",
+                "app/style.css"
             ],
             "js": [
                 "jqChartJQueryPlugin/js/jquery-1.11.1.min.js",
                 "jqChartJQueryPlugin/js/jquery.mousewheel.js",
                 "jqChartJQueryPlugin/js/jquery.jqChart.min.js",
                 "jqChartJQueryPlugin/js/jquery.jqRangeSlider.min.js",
-                "main.js"
+                "app/dateformat.js",
+                "app/app.js",
+                "app/main.js"
             ]
         }
     ]

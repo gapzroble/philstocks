@@ -87,20 +87,33 @@ func importCsv(filename string) {
 	}
 
 	for _, row := range rawCSVdata {
-		importRow(row)
+		importRow(row, filename)
 	}
 }
 
-func importRow(r []string) {
+func importRow(r []string, file string) {
 	// COSCO,02/25/2015,9.72,9.75,9.52,9.66,2714500,2714433
-	d, _ := time.Parse("01/02/2006", r[1])
+	var (
+		d   time.Time
+		er1 error
+		er2 error
+	)
+	d, er1 = time.Parse("01/02/2006", r[1])
+	if er1 != nil {
+		d, er2 = time.Parse("1-2-2006", r[1])
+		if er2 != nil {
+			d, _ = time.Parse("01-02-2006", r[1])
+		}
+	}
 	o, _ := strconv.ParseFloat(r[2], 64)
 	h, _ := strconv.ParseFloat(r[3], 64)
 	l, _ := strconv.ParseFloat(r[4], 64)
 	c, _ := strconv.ParseFloat(r[5], 64)
 	v, _ := strconv.ParseFloat(r[6], 64)
 	n, _ := strconv.ParseFloat(r[7], 64)
-	q := Quote{Symbol: r[0], Date: d, Low: l, High: h, Open: o, Close: c, Volume: v, NetBuySell: n}
+	_file := strings.Replace(file, "quotes\\stockQuotes_", "", -1)
+	_file2 := strings.Replace(_file, ".csv", "", -1)
+	q := Quote{Symbol: r[0], Date: d, Low: l, High: h, Open: o, Close: c, Volume: v, NetBuySell: n, Csv: _file2}
 
 	date := d.Format("2006-01-02")
 	var test Quote
@@ -131,8 +144,9 @@ func downloadQuotes() bool {
 		}
 	}
 
-	DownloadToFile(dropboxUrl, target, "quotes")
-	Unzip(target, quotesFolder)
+	if ok := DownloadToFile(dropboxUrl, target, "quotes"); ok {
+		Unzip(target, quotesFolder)
+	}
 	return true
 }
 
@@ -150,5 +164,5 @@ func importCurrent(symbol string, qs url.Values) {
 	r[6] = qs.Get("v")
 	r[7] = "0"
 	log.Println(r)
-	importRow(r)
+	importRow(r, "")
 }
