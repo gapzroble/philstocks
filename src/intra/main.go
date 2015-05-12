@@ -20,7 +20,7 @@ func Run() {
                 t := time.Now().Local()
                 h, _ := strconv.Atoi(t.Format("15"))
                 i, _ := strconv.Atoi(t.Format("04"))
-                if h >= 9  && i >= 30 {
+                if  h > 9 || h == 9  && i >= 30 {
                     importCurrent(symbol, r.URL.Query())
                 }
 
