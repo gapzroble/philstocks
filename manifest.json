@@ -13,7 +13,7 @@
                 "jqChartJQueryPlugin/css/jquery.jqChart.css",
                 "jqChartJQueryPlugin/css/jquery.jqRangeSlider.css",
                 "jqChartJQueryPlugin/themes/smoothness/jquery-ui-1.10.4.css",
-                "app/style.css"
+                "style.css"
             ],
             "js": [
                 "jqChartJQueryPlugin/js/jquery-1.11.1.min.js",
@@ -22,9 +22,6 @@
                 "jqChartJQueryPlugin/js/jquery.jqRangeSlider.min.js",
                 "date.format.js",
                 "main.js"
-                "app/dateformat.js",
-                "app/app.js",
-                "app/main.js"
             ]
         }
     ]

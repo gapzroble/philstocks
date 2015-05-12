@@ -1,4 +1,4 @@
-function app($){
+jQuery(function($){
 
     // globals
     var mainId = "intracandle", main = $("#"+mainId),
@@ -263,17 +263,15 @@ function app($){
         });
     };
     
-    if (getSymbol())
+    var run = function() 
     {
         install();
         observeSymbol();
+    };
+    
+    if (getSymbol())
+    {
+        run();
     }
     
-<<<<<<< .mine
-};
-
-=======
 });
-
->>>>>>> .theirs
-jQuery(app);
