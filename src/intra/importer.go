@@ -97,6 +97,7 @@ func importRow(r []string, file string) {
 		d   time.Time
 		er1 error
 		er2 error
+		er3 error
 	)
 	d, er1 = time.Parse("01/02/2006", r[1])
 	if er1 != nil {

@@ -46,7 +46,7 @@ jQuery(function($){
     };
     
     var shrink = function (value, index, arr) {
-        var toIndex = arr.length - 50;
+        var toIndex = arr.length - (20*6); // 6 months
         if (toIndex > 0) {
             return index >= toIndex;
         }
@@ -161,7 +161,7 @@ jQuery(function($){
         var current = getCurrent();
         ohlcData = []; volumeData = [];
         
-        $.getJSON("https://localhost/150/"+getSymbol(), current)
+        $.getJSON("https://localhost/250/"+getSymbol(), current)
             .done(function(data) {
                 data.sort(function (a, b) {
                     if (a.Date < b.Date) return -1;

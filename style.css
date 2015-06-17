@@ -1,13 +1,13 @@
 #intracandle {
-    width: 588px;
-    margin-left: 146px;
+    width: 980px;
     background: white;
+    border-top: 1px solid rgb(185, 185, 185);
 }
 #jqChart {
-    height: 200px;
+    height: 210px;
 }
 #jqChartVolume {
-    height: 70px;
+    height: 90px;
     /*margin-top: -19px;*/
     margin-top: -27px;
     background: white;
