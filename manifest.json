@@ -10,18 +10,18 @@
         {
             "matches": ["https://www.philstocks.ph/Infinity/Default.cshtml"],
             "css": [
-                "jqChartJQueryPlugin/css/jquery.jqChart.css",
-                "jqChartJQueryPlugin/css/jquery.jqRangeSlider.css",
-                "jqChartJQueryPlugin/themes/smoothness/jquery-ui-1.10.4.css",
-                "style.css"
+                "assets/jqChartJQueryPlugin/css/jquery.jqChart.css",
+                "assets/jqChartJQueryPlugin/css/jquery.jqRangeSlider.css",
+                "assets/jqChartJQueryPlugin/themes/smoothness/jquery-ui-1.10.4.css",
+                "assets/style.css"
             ],
             "js": [
-                "jqChartJQueryPlugin/js/jquery-1.11.1.min.js",
-                "jqChartJQueryPlugin/js/jquery.mousewheel.js",
-                "jqChartJQueryPlugin/js/jquery.jqChart.min.js",
-                "jqChartJQueryPlugin/js/jquery.jqRangeSlider.min.js",
-                "date.format.js",
-                "main.js"
+                "assets/jqChartJQueryPlugin/js/jquery-1.11.1.min.js",
+                "assets/jqChartJQueryPlugin/js/jquery.mousewheel.js",
+                "assets/jqChartJQueryPlugin/js/jquery.jqChart.min.js",
+                "assets/jqChartJQueryPlugin/js/jquery.jqRangeSlider.min.js",
+                "assets/date.format.js",
+                "assets/main.js"
             ]
         }
     ]
