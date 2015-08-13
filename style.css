@@ -26,3 +26,6 @@
     font-size: 12px;
     font-family: Arial;
 }
+#tickerContainer {
+	opacity: 0.2;
+}
