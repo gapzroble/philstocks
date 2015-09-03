@@ -15,7 +15,7 @@ jQuery(function($){
     };
     
     var getCurrent = function() {
-        var d = new Date(new Date().toLocaleDateString());
+        var d = new Date(); //new Date(new Date().toLocaleDateString());
         var r = $("#symQuoteDay").html().split(' - ');
         var h = parseFloat(r[1]);
         var l = parseFloat(r[0]);
