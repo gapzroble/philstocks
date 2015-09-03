@@ -8,7 +8,7 @@
     "manifest_version": 2,
     "content_scripts": [
         {
-            "matches": ["https://www.philstocks.ph/Infinity/Default.cshtml"],
+            "matches": ["https://www.philstocks.ph/Infinity/Default.cshtml", "http://www.philstocks.ph/Infinity/Default.cshtml"],
             "css": [
                 "jqChartJQueryPlugin/css/jquery.jqChart.css",
                 "jqChartJQueryPlugin/css/jquery.jqRangeSlider.css",

@@ -1,7 +1,6 @@
 #intracandle {
     width: 980px;
     background: white;
-    border-top: 1px solid rgb(185, 185, 185);
 }
 #jqChart {
     height: 210px;
@@ -21,6 +20,7 @@
 }
 .info {
     padding: 2px;
+    background-color: rgb(185, 185, 185);
 }
 .info * {
     font-size: 12px;

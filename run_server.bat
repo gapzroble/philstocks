@@ -1,6 +1,6 @@
 @echo off
 
-set GOPATH=C:\Go\gocode
+set GOPATH=d:\dev\Go\gocode
 
 go get github.com/go-martini/martini
 go get github.com/go-sql-driver/mysql
