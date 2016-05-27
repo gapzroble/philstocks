@@ -26,26 +26,24 @@ func (this Files) Swap(i, j int) {
 }
 
 var (
-	dropboxUrl   string
+	dropboxUrls  []string
 	quotesFolder string
 )
 
 func init() {
+    quotesFolder = "quotes"
 	//dropboxUrl = "https://www.dropbox.com/sh/1dluf0lawy9a7rm/AADwhfNwFRVoQg5TaqOaVFs9a/2014?dl=1"
-	dropboxUrl = "https://www.dropbox.com/sh/1dluf0lawy9a7rm/AACh8nCUuvTvP4YdVEH29On2a/2015?dl=1"
-	quotesFolder = "quotes"
+	//dropboxUrl = "https://www.dropbox.com/sh/1dluf0lawy9a7rm/AACh8nCUuvTvP4YdVEH29On2a/2015?dl=1"
 }
 
 func importQuotes() {
-	go func() {
-		doImportQuotes()
-		calculateMA()
-	}()
+	go doImportQuotes()
 
-	if ok := downloadQuotes(); ok {
-		doImportQuotes()
-		calculateMA()
+	for _, url := range dropboxUrls {
+        downloadQuotes(url)
 	}
+
+	doImportQuotes()
 }
 
 func doImportQuotes() {
@@ -131,7 +129,7 @@ func importRow(r []string, file string) {
 
 // -----------------------------------------------------------------------------
 
-func downloadQuotes() bool {
+func downloadQuotes(dropboxUrl string) bool {
 	log.Printf("[downloadQuotes] started\n")
 	defer log.Printf("[downloadQuotes] done.\n")
 

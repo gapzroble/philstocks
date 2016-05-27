@@ -1,0 +1,10 @@
+{
+    "require": {
+        "ext-curl": "*",
+        "gabordemooij/redbean": "~4.3"
+    },
+    "autoload": {
+        "psr-0": { "": "src/" },
+        "files": ["lib/functions.php"]
+    }
+}

@@ -2,4 +2,6 @@ nbproject
 *.exe
 !/quotes/.gitkeep
 /quotes/
-*.sublime-workspace
+/server
+/vendor
+/log
