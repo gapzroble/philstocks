@@ -1,7 +1,7 @@
 nbproject
 *.exe
 !/quotes/.gitkeep
-/quotes/
+/quotes
 /server
 /vendor
 /log

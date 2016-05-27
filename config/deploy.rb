@@ -28,6 +28,7 @@ set :deploy_to, '/var/www/pse-tool'
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
+set :linked_dirs, fetch(:linked_dirs, []).push('vendor')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -36,6 +37,13 @@ set :deploy_to, '/var/www/pse-tool'
 set :keep_releases, 1
 
 namespace :deploy do
+  after :updated, :composer_install do
+    on roles(:web) do
+      within release_path do
+        execute "cd #{release_path} && composer install"
+      end
+    end
+  end
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
