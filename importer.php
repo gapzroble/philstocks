@@ -38,8 +38,8 @@ Curl\Multi::download($dropboxUrls, function ($url, $requireLatest = false) {
 
 debug('extracting quotes');
 foreach (glob(__DIR__.'/quotes/*.zip') as $zip) {
-    $cmd = sprintf('unzip -ov -d %s %s', dirname($zip), $zip);
-    exec($cmd);
+    $cmd = sprintf('unzip -oqqq -d %s %s', dirname($zip), $zip);
+    system($cmd);
 }
 
 debug('importing quotes');
