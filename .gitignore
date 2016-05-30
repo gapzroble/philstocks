@@ -17,3 +17,4 @@
 /_backup
 /var/quotes/*
 !var/quotes/.gitkeep
+!var/sql/

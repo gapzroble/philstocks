@@ -3,6 +3,7 @@
 namespace AppBundle\Command; 
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
+use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Importer
@@ -12,11 +13,18 @@ class ImportCommand extends AbstractCommand
 
     protected function configure()
     {
-        $this->setName('quotes:import');
+        $this
+            ->setName('quotes:import')
+            ->addArgument('year', InputArgument::OPTIONAL)
+        ;
     }
 
     protected function doExecute()
     {
+        $this->year = $this->input->getArgument('year');
+        if ($this->year && $this->year < 2006) {
+            throw new \Exception('Invalid year');
+        }
         try {
             $this->downloadQuotes();
             $this->importQuotes();
@@ -29,12 +37,10 @@ class ImportCommand extends AbstractCommand
     private function importQuotes()
     {
         $this->output->writeln('importing quotes');
-        foreach (glob($this->getQuotesDir().'/*.csv') as $path) {
+        $pattern = $this->year ? sprintf('stock*%d*.csv', $this->year) : 'stock*.csv';
+        foreach (glob($this->getQuotesDir().'/'.$pattern) as $path) {
             gc_collect_cycles();
             $filename = basename($path);
-            if (stripos($filename, 'stock') === false) {
-                continue;
-            }
             $stmt = $this->exec('SELECT filename FROM csv WHERE filename = ?', $filename);
             if ($stmt->rowCount()) {
                 unset($stmt);
@@ -43,11 +49,12 @@ class ImportCommand extends AbstractCommand
             unset($stmt);
             $this->output->writeln($filename);
             if (($handle = fopen($path, 'r')) !== false) {
+                $insert = false;
                 while (($data = fgetcsv($handle, 1000, ',')) !== false) {
                     if (strpos($data[0], '#') === 0 || !isset($data[1])) {
                         continue;
                     }
-                    if ($this->skip($data[0])) {
+                    if ($this->ignore($data[0])) {
                         continue;
                     }
                     $dateSeparator = strpos($data[1], '/') !== false ? '/' : '-';
@@ -63,23 +70,29 @@ class ImportCommand extends AbstractCommand
                     );
                     $this->exec($sql, $data);
                     $this->output->write('.');
+                    $insert = true;
                     unset($sql, $data, $keys, $dateSeparator);
                 }
                 fclose($handle);
                 gc_collect_cycles();
-                $this->output->writeln('');
+                if ($insert) {
+                    $this->output->writeln('');
+                }
             }
-            $this->exec('INSERT INTO csv (filename) VALUES(?)', $filename);
+            if (!$this->year) {
+                $this->exec('INSERT INTO csv (filename) VALUES(?)', $filename);
+            }
         }
     }
 
-    private function skip($symbol)
+    private function ignore($symbol)
     {
         static $symbols;
         if (!$symbols) {
             $stmt = $this->exec('SELECT symbol FROM skip');
             $result = $stmt->fetchAll(\PDO::FETCH_COLUMN);
             $symbols = array_flip($result);
+            unset($stmt, $result);
         }
 
         return isset($symbols[$symbol]);
