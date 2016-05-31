@@ -2,6 +2,8 @@
 
 namespace AppBundle\Command;
 
+use Symfony\Component\Console\Input\InputOption;
+
 /**
  * ATR calc
  */
@@ -10,14 +12,16 @@ class AtrCommand extends AbstractCommand
 
     protected function configure()
     {
-        $this->setName('quotes:atr');
+        $this
+            ->setName('quotes:atr')
+            ->addOption('all', null, InputOption::VALUE_NONE)
+        ;
     }
 
     protected function doExecute()
     {
         $lastDate = Helper::getLastDate($this->conn);
-        $stmt = $this->exec('SELECT DISTINCT symbol FROM quotes');
-        $symbols = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        $symbols = $this->getSymbols($this->input->getOption('all'));
         $count = count($symbols);
         unset($stmt);
         foreach ($symbols as $i => $symbol) {

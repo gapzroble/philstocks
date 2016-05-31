@@ -23,7 +23,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $this->output->writeln('<info>Done.');
     }
 
-    protected abstract function doExecute();
+    abstract protected function doExecute();
 
     protected function exec($sql, $params = null)
     {
@@ -36,5 +36,19 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected function progress($text, $current, $total)
     {
         $this->output->writeln($text.' : '.$current.' of '.$total.' ('.(number_format($current*100/$total, 2)).'%)');
+    }
+
+    protected function getSymbols($all = false)
+    {
+        if (is_string($all)) {
+            $table = $all;
+        } else {
+            $table = $all ? 'quotes' : 'risky';
+        }
+        $sql = sprintf('SELECT DISTINCT symbol FROM %s ORDER BY symbol', $table);
+        $stmt = $this->exec($sql);
+        $symbols = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $symbols;
     }
 }

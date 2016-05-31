@@ -42,6 +42,19 @@ class Atr
      */
     private $value;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="peak", type="boolean", nullable=true)
+     */
+    private $peak;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="bottom", type="boolean", nullable=true)
+     */
+    private $bottom;
 
     /**
      * Get id
@@ -124,5 +137,52 @@ class Atr
     {
         return $this->value;
     }
-}
 
+    /**
+     * Set peak
+     *
+     * @param string $peak
+     *
+     * @return Atr
+     */
+    public function setPeak($peak)
+    {
+        $this->peak = $peak;
+
+        return $this;
+    }
+
+    /**
+     * Get peak
+     *
+     * @return string
+     */
+    public function getPeak()
+    {
+        return $this->peak;
+    }
+
+    /**
+     * Set bottom
+     *
+     * @param string $bottom
+     *
+     * @return Atr
+     */
+    public function setBottom($bottom)
+    {
+        $this->bottom = $bottom;
+
+        return $this;
+    }
+
+    /**
+     * Get bottom
+     *
+     * @return string
+     */
+    public function getBottom()
+    {
+        return $this->bottom;
+    }
+}

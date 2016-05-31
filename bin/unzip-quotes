@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cd var/quotes && unzip -o -u -aa *.zip

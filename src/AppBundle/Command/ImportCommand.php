@@ -1,6 +1,7 @@
 <?php
 
-namespace AppBundle\Command; 
+namespace AppBundle\Command;
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 use Symfony\Component\Console\Input\InputArgument;
@@ -114,7 +115,8 @@ class ImportCommand extends AbstractCommand
             $results = Promise\settle($promises)->wait();
             foreach ($results as $destination => $result) {
                 if ($result['state'] == 'fullfilled') {
-                    Helper::runCommand(sprintf('unzip -oq -d %s %s', dirname($destination), $destination));
+                    $command = sprintf('cd %s && find . -name "*.zip" -print0 | xargs -0 -n1 unzip -o', dirname($destination));
+                    Helper::runCommand($command);
                 }
             }
             unset($promises, $results);
