@@ -32,4 +32,9 @@ abstract class AbstractCommand extends ContainerAwareCommand
 
         return $stmt;
     }
+
+    protected function progress($text, $current, $total)
+    {
+        $this->output->writeln($text.' : '.$current.' of '.$total.' ('.(number_format($current*100/$total, 2)).'%)');
+    }
 }

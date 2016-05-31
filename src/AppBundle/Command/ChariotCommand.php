@@ -20,7 +20,7 @@ class ChariotCommand extends AbstractCommand
         $symbols = $stmt->fetchAll(\PDO::FETCH_COLUMN);
         $count = count($symbols);
         foreach ($symbols as $i => $symbol) {
-            $this->output->writeln(str_pad($symbol, 6, ' ', STR_PAD_LEFT).' : '.($i+1).' of '.$count.' ('.(number_format(($i+1)*100/$count, 2)).'%)');
+            $this->progress(str_pad($symbol, 6, ' ', STR_PAD_LEFT), $i + 1, $count);
             $stmt = $this->exec('SELECT date FROM chariot WHERE symbol = ? ORDER BY date DESC LIMIT 1', $symbol);
             $last = $stmt->fetch(\PDO::FETCH_COLUMN);
             if ($lastDate != $last) {
@@ -54,19 +54,17 @@ class ChariotCommand extends AbstractCommand
         $high40 = trader_ma($high, 40, TRADER_MA_TYPE_SMA);
         $ema20 = trader_ma($close, 20, TRADER_MA_TYPE_EMA);
         unset ($high, $low, $close);
-        $count = count($low40);
         $i = 0;
-        for (; $index < $count; $index++, $i++) {
+        for (; isset($low40[$index]); $index++, $i++) {
             $this->exec(
                 'INSERT IGNORE INTO chariot (symbol, date, ema20, low40, high40) VALUES(?, ?, ?, ?, ?)',
                 array($symbol, $quotes[$index]['date'], $ema20[$index], $low40[$index], $high40[$index])
             );
             $this->output->write('.');
-            unset($stmt);
         }
         if ($i) {
             $this->output->writeln('');
         }
-        unset($high40, $low40, $ema20, $quotes, $index, $count);
+        unset($high40, $low40, $ema20, $quotes, $index, $i);
     }
 }
