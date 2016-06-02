@@ -115,17 +115,17 @@ class ImportCommand extends AbstractCommand
                 'debug' => $debug,
             ));
         }
-        unset($client);
         if ($promises) {
             $results = Promise\settle($promises)->wait();
             foreach ($results as $destination => $result) {
-                if ($result['state'] == 'fullfilled') {
+                if ($result['state'] == 'fulfilled') {
                     $command = sprintf('cd %s && find . -name "*.zip" -print0 | xargs -0 -n1 unzip -o', dirname($destination));
                     $this->runCommand($command);
                 }
             }
             unset($promises, $results);
         }
+        unset($client);
         gc_collect_cycles();
     }
 
