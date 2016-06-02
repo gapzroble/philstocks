@@ -120,6 +120,13 @@ class Ma
     private $vol1m;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="pl", type="decimal", precision=10, scale=3)
+     */
+    private $pl;
+
+    /**
      * Get id
      *
      * @return int
@@ -391,5 +398,17 @@ class Ma
     public function getVol1m()
     {
         return $this->vol1m;
+    }
+
+    public function setPl($pl)
+    {
+        $this->pl = $pl;
+
+        return $this;
+    }
+
+    public function getPl()
+    {
+        return $this->pl;
     }
 }

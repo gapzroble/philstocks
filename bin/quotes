@@ -1,3 +1,4 @@
 #!/bin/sh
 
-php bin/console quotes:$*
+php bin/console quotes:import
+php bin/console quotes:calc
