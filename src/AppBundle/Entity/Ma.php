@@ -38,44 +38,51 @@ class Ma
     /**
      * @var string
      *
-     * @ORM\Column(name="ema20", type="decimal", precision=10, scale=4)
+     * @ORM\Column(name="close", type="decimal", precision=10, scale=3)
+     */
+    private $close;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ema20", type="decimal", precision=10, scale=3)
      */
     private $ema20;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="low40", type="decimal", precision=10, scale=4)
+     * @ORM\Column(name="low40", type="decimal", precision=10, scale=3)
      */
     private $low40;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="high40", type="decimal", precision=10, scale=4)
+     * @ORM\Column(name="high40", type="decimal", precision=10, scale=3)
      */
     private $high40;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ma50", type="decimal", precision=10, scale=4)
+     * @ORM\Column(name="ma50", type="decimal", precision=10, scale=3)
      */
     private $ma50;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ema15", type="decimal", precision=10, scale=4)
+     * @ORM\Column(name="ema15", type="decimal", precision=10, scale=3)
      */
     private $ema15;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="close", type="decimal", precision=10, scale=4)
+     * @ORM\Column(name="vol50", type="float")
      */
-    private $close;
+    private $vol50;
 
     /**
      * @var boolean
@@ -97,6 +104,20 @@ class Ma
      * @ORM\Column(name="cross_high", type="boolean", nullable=true)
      */
     private $crossHigh;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vol_above_ave", type="boolean", nullable=true)
+     */
+    private $volup;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vol_1m", type="boolean", nullable=true)
+     */
+    private $vol1m;
 
     /**
      * Get id
@@ -334,5 +355,41 @@ class Ma
     public function getCrossHigh()
     {
         return $this->crossHigh;
+    }
+
+    public function setVol50($vol50)
+    {
+        $this->vol50 = $vol50;
+
+        return $this;
+    }
+
+    public function getVol50()
+    {
+        return $this->vol50;
+    }
+
+    public function setVolup($volup)
+    {
+        $this->volup = $volup;
+
+        return $this;
+    }
+
+    public function getVolup()
+    {
+        return $this->volup;
+    }
+
+    public function setVol1m($vol1m)
+    {
+        $this->vol1m = $vol1m;
+
+        return $this;
+    }
+
+    public function getVol1m()
+    {
+        return $this->vol1m;
     }
 }

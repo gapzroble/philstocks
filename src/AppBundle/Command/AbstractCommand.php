@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Abstract Command
@@ -50,5 +51,26 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $symbols = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         return $symbols;
+    }
+
+    protected function getLastDate($symbol = null, $table = 'quotes')
+    {
+        if ($symbol) {
+            $stmt = $this->exec('SELECT date FROM '.$table.' WHERE symbol = ? ORDER BY date DESC LIMIT 1', $symbol);
+        } else {
+            $stmt = $this->exec('SELECT date FROM '.$table.' ORDER BY date DESC LIMIT 1');
+        }
+        $date = $stmt->fetch(\PDO::FETCH_COLUMN);
+        unset($stmt);
+
+        return $date;
+    }
+
+    protected function runCommand($commandLine)
+    {
+        $process = new Process($commandLine);
+        $process->run();
+
+        return $process->isSuccessful();
     }
 }

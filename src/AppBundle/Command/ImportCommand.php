@@ -12,6 +12,9 @@ use Symfony\Component\Console\Input\InputArgument;
 class ImportCommand extends AbstractCommand
 {
 
+    use RiskyTrait;
+    use IgnoreTrait;
+
     protected function configure()
     {
         $this
@@ -29,6 +32,8 @@ class ImportCommand extends AbstractCommand
         try {
             $this->downloadQuotes();
             $this->importQuotes();
+            $this->updateRisky();
+            $this->updateIgnore();
         } catch (\Exception $ex) {
             $this->output->writeln(sprintf('<error>%s: %s', get_class($ex), $ex->getMessage()));
             $this->output->writeln($ex->getTraceAsString());
@@ -116,7 +121,7 @@ class ImportCommand extends AbstractCommand
             foreach ($results as $destination => $result) {
                 if ($result['state'] == 'fullfilled') {
                     $command = sprintf('cd %s && find . -name "*.zip" -print0 | xargs -0 -n1 unzip -o', dirname($destination));
-                    Helper::runCommand($command);
+                    $this->runCommand($command);
                 }
             }
             unset($promises, $results);

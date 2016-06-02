@@ -29,14 +29,6 @@ class Risky
     private $symbol;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="current", type="decimal", precision=10, scale=4)
-     */
-    private $current;
-
-
-    /**
      * Get id
      *
      * @return int
@@ -69,29 +61,4 @@ class Risky
     {
         return $this->symbol;
     }
-
-    /**
-     * Set current
-     *
-     * @param string $current
-     *
-     * @return Risky
-     */
-    public function setCurrent($current)
-    {
-        $this->current = $current;
-
-        return $this;
-    }
-
-    /**
-     * Get current
-     *
-     * @return string
-     */
-    public function getCurrent()
-    {
-        return $this->current;
-    }
 }
-

@@ -38,7 +38,7 @@ class Atr
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="decimal", precision=10, scale=4)
+     * @ORM\Column(name="value", type="decimal", precision=10, scale=3)
      */
     private $value;
 
