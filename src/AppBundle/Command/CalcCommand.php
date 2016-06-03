@@ -23,6 +23,7 @@ class CalcCommand extends AbstractCommand
 
     protected function doExecute()
     {
+        $this->output->writeln('calculate');
         $lastDate = $this->getLastDate();
         $symbols = $this->getSymbols($this->input->getOption('all'));
         $count = count($symbols);

@@ -2,6 +2,8 @@
 
 namespace AppBundle\Command;
 
+use Symfony\Component\Console\Input\InputOption;
+
 /**
  * filter
  */
@@ -10,7 +12,10 @@ class FilterCommand extends AbstractCommand
 
     protected function configure()
     {
-        $this->setName('quotes:filter');
+        $this
+            ->setName('quotes:filter')
+            ->addOption('top', null, InputOption::VALUE_NONE)
+        ;
     }
 
     protected function doExecute()
@@ -18,7 +23,13 @@ class FilterCommand extends AbstractCommand
         $date = $this->getLastDate();
 
         $stmt = $this->exec('SELECT symbol, uptrend, vol_above_ave, vol_1m, cross_low, cross_high, pl FROM ma WHERE date = ? ORDER BY pl, uptrend, vol_above_ave, vol_1m ASC', $date);
-        foreach ($stmt->fetchAll() as $row) {
+        $result = $stmt->fetchAll();
+        if ($top = $this->input->getOption('top')) {
+            krsort($result);
+            $this->output->writeln($date);
+            $this->writeRow('Symbol', 'Uptrend', 'Vol Up', 'Vol 1m', 'xLow', 'xHigh', 'P/L');
+        }
+        foreach ($result as $row) {
             $this->writeRow(
                 $row['symbol'],
                 $row['uptrend'] ? '*' : '',
@@ -29,12 +40,15 @@ class FilterCommand extends AbstractCommand
                 $row['pl'] != 0 ? number_format($row['pl'], 2).'%' : ''
             );
         }
-        $this->writeRow('Symbol', 'Uptrend', 'Vol Up', 'Vol 1m', 'xLow', 'xHigh', 'P/L');
+        if (!$top) {
+            $this->writeRow('Symbol', 'Uptrend', 'Vol Up', 'Vol 1m', 'xLow', 'xHigh', 'P/L');
+            $this->output->writeln($date);
+        }
     }
 
     private function writeRow($args = null)
     {
-        $width = 12;
+        $width = 8;
         $args = is_array($args) ? $args : func_get_args();
         foreach ($args as $text) {
             $this->output->write(str_pad($text, $width, ' ', STR_PAD_BOTH));

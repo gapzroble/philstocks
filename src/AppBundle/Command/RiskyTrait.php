@@ -16,9 +16,10 @@ trait RiskyTrait
         $this->exec('TRUNCATE TABLE risky');
         foreach ($symbols as $row) {
             if ($row['close'] <= 2) {
-                $this->output->writeln(str_pad($row['symbol'], 6, ' ', STR_PAD_LEFT).' : '.$row['close']);
+                $this->output->write('.');
                 $this->exec('INSERT INTO risky (symbol) VALUES (?)', $row['symbol']);
             }
         }
+        $this->output->writeln('');
     }
 }
