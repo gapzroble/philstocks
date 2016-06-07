@@ -1,4 +1,4 @@
 #!/bin/sh
 
-php bin/console quotes:import
-php bin/console quotes:calc
+php bin/console quotes:import --env=prod
+php bin/console quotes:calc --env=prod

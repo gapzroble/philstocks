@@ -18,3 +18,4 @@
 /var/quotes/*
 !var/quotes/.gitkeep
 !var/sql/
+/.rsync_cache
