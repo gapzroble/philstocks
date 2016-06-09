@@ -21,7 +21,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $this->conn = $this->manager->getConnection();
 
         $this->doExecute();
-        $this->output->writeln('<info>Done.');
+        //$this->output->writeln('<info>Done.');
     }
 
     abstract protected function doExecute();

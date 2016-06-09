@@ -21,6 +21,22 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $conn = $this->get('doctrine')->getManager()->getConnection();
+        $stmt = $conn->prepare('SELECT distinct date FROM quotes ORDER BY date desc LIMIT 3');
+        $stmt->execute();
+        $dates = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        $content = '<pre>';
+        foreach ($dates as $date) {
+            $content .= $this->runFilter($date);
+            $content .= '<br>';
+        }
+
+        return new Response($content);
+    }
+
+    private function runFilter($date)
+    {
         $kernel = $this->get('kernel');
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -29,12 +45,12 @@ class DefaultController extends Controller
             'command' => 'quotes:filter',
             '--env' => $this->container->getParameter('kernel.environment'),
             '--top' => true,
+            '--up' => true,
+            '--date' => $date,
         ));
         $output = new BufferedOutput();
         $application->run($input, $output);
 
-        $content = $output->fetch();
-
-        return new Response('<pre>'.$content);
+        return $output->fetch();
     }
 }

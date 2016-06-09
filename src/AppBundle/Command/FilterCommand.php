@@ -15,12 +15,16 @@ class FilterCommand extends AbstractCommand
         $this
             ->setName('quotes:filter')
             ->addOption('top', null, InputOption::VALUE_NONE)
+            ->addOption('up', null, InputOption::VALUE_NONE)
+            ->addOption('date', null, InputOption::VALUE_OPTIONAL)
         ;
     }
 
     protected function doExecute()
     {
-        $date = $this->getLastDate();
+        if (!($date = $this->input->getOption('date'))) {
+            $date = $this->getLastDate();
+        }
 
         $stmt = $this->exec('SELECT symbol, uptrend, vol_above_ave, vol_1m, cross_low, cross_high, pl FROM ma WHERE date = ? ORDER BY pl, uptrend, vol_above_ave, vol_1m ASC', $date);
         $result = $stmt->fetchAll();
@@ -30,6 +34,9 @@ class FilterCommand extends AbstractCommand
             $this->writeRow('Symbol', 'Uptrend', 'Vol Up', 'Vol 1m', 'xLow', 'xHigh', 'P/L');
         }
         foreach ($result as $row) {
+            if ($this->input->getOption('up') && $row['pl'] <= 0) {
+                continue;
+            }
             $this->writeRow(
                 $row['symbol'],
                 $row['uptrend'] ? '*' : '',
