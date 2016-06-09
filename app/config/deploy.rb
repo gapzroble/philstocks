@@ -32,4 +32,8 @@ set :symfony_console, "bin/console"
 set :symfony_vendors,       "vendors"
 set :composer_bin,          "/usr/local/bin/composer"
 
-#after "deploy", "deploy:cleanup"
+set :writable_dirs,       [cache_path, log_path]
+set :permission_method,   :acl
+set :use_set_permissions, true
+
+after "deploy", "deploy:cleanup"
