@@ -63,7 +63,7 @@ class ImportCommand extends AbstractCommand
                     if (strpos($data[0], '#') === 0 || !isset($data[1])) {
                         continue;
                     }
-                    if ($this->ignore($data[0])) {
+                    if ($this->isIgnored($data[0])) {
                         continue;
                     }
                     $dateSeparator = strpos($data[1], '/') !== false ? '/' : '-';
@@ -94,7 +94,7 @@ class ImportCommand extends AbstractCommand
         }
     }
 
-    private function ignore($symbol)
+    private function isIgnored($symbol)
     {
         static $symbols;
         if (!$symbols) {

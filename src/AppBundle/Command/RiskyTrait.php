@@ -15,7 +15,7 @@ trait RiskyTrait
         $symbols = $stmt->fetchAll();
         $this->exec('TRUNCATE TABLE risky');
         foreach ($symbols as $row) {
-            if ($row['close'] <= 2) {
+            if ($row['close'] >= 0.01 && $row['close'] <= 2) {
                 $this->output->write('.');
                 $this->exec('INSERT INTO risky (symbol) VALUES (?)', $row['symbol']);
             }
